@@ -1,14 +1,7 @@
 class Users extends Array{
 
-    constructor() {
-        super();
-        this.nextId = 1;
-    }
-
     add(user, callback){
-        if (user && user.name && user.score){
-            user.id = this.nextId;
-			this.nextId++
+        if (user && user.name && user.score && user.id){
             this.push(user);
             callback(null, user);
         }else{
@@ -16,24 +9,20 @@ class Users extends Array{
         }
     }
 
-    /*
-
     findAll(callback, offset = 0, limit, fields){
-        let filter = (limit) ? this.slice(offset, parseInt(offset) + parseInt(limit))
-            : this.slice(offset)
-        if (fields){
-            let result = new Users();
-            filter.forEach((user) => {
-                let usr = Object.assign({}, user);
-                Object.keys(usr).forEach((key) => {
-                    if (!fields.includes(key)) delete usr[key];
-                });
-                result.push(usr);
-            });
-            return callback(null, result);
-        }
-        callback(null, filter);
-    }*/
+        fields = fields ? fields.split(',') : null;
+        let items = Object.keys(this).map(key => {
+            let item = {};
+            if (fields)
+                fields.forEach(field => item[field] = this[key][field]);
+            else
+                item = this[key];
+            return item;
+        });
+        if (limit)
+            items = items.slice(offset, offset + limit);
+        callback(null, items);
+    }
 
     findById(id, callback){
         let f_user = this.find((user) => user.id == id);
@@ -43,34 +32,34 @@ class Users extends Array{
             callback(new Error('Пользователь не найден'));
     }
 	
-	update(id, callback){
-        if (user && user.name && user.score){
-            let u_user = this.find((user) => user.id == id);
+	update(user, callback){
+        if (user && user.name && user.score && user.id){
+            let u_user = this.find((item) => item.id == user.id);
             if (u_user){
                 Object.assign(u_user, user);
                 callback(null, u_user);
             }else{
-                add(user, callback);
+                callback(null, {});
             }
         }else{
             callback(new Error("Ошибка обновления"));
         }
     }
 
- /* remove(id, callback){
-        let usr = this._findByIdSync(id);
-        if (usr){
-            var index = this.indexOf(usr);
+    remove(id, callback){
+        let u_user = this.find((item) => item.id == id);
+        if (u_user){
+            var index = this.indexOf(u_user);
             let user = this.splice(index, 1);
             callback(null, user[0]);
         }else{
-            callback(new Error('User not found'));
+            callback(new Error('Пользователь не найден'));
         }
     }
 
     removeAll(callback){
         callback(null, this.splice(0, this.length));
-    }*/
+    }
 
 }
 
