@@ -1,15 +1,15 @@
-class Users extends Array{
+class Users extends Array {
 
-    add(user, callback){
-        if (user && user.name && user.score && user.id){
+    add(user, callback) {
+        if (user && user.name && user.score && user.id) {
             this.push(user);
             callback(null, user);
-        }else{
+        } else {
             callback(new Error("Неверные параметры"));
         }
     }
 
-    findAll(callback, offset = 0, limit, fields){
+    findAll(callback, offset = 0, limit, fields) {
         fields = fields ? fields.split(',') : null;
         let items = Object.keys(this).map(key => {
             let item = {};
@@ -24,40 +24,40 @@ class Users extends Array{
         callback(null, items);
     }
 
-    findById(id, callback){
+    findById(id, callback) {
         let f_user = this.find((user) => user.id == id);
         if (f_user)
             callback(null, f_user);
         else
             callback(new Error('Пользователь не найден'));
     }
-	
-	update(user, callback){
-        if (user && user.name && user.score && user.id){
+
+    update(user, callback) {
+        if (user && user.name && user.score && user.id) {
             let u_user = this.find((item) => item.id == user.id);
-            if (u_user){
+            if (u_user) {
                 Object.assign(u_user, user);
                 callback(null, u_user);
-            }else{
+            } else {
                 callback(null, {});
             }
-        }else{
+        } else {
             callback(new Error("Ошибка обновления"));
         }
     }
 
-    remove(id, callback){
+    remove(id, callback) {
         let u_user = this.find((item) => item.id == id);
-        if (u_user){
+        if (u_user) {
             var index = this.indexOf(u_user);
             let user = this.splice(index, 1);
             callback(null, user[0]);
-        }else{
+        } else {
             callback(new Error('Пользователь не найден'));
         }
     }
 
-    removeAll(callback){
+    removeAll(callback) {
         callback(null, this.splice(0, this.length));
     }
 

@@ -10,13 +10,13 @@ let users = new user_list();
 let id = 1;
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({"extended":true}));
+app.use(bodyParser.urlencoded({"extended": true}));
 
 app.listen(PORT).on('listening', () => {
     console.log(`Start HTTP on port ${PORT}`);
 });
 
-app.post('/rpc', ({ body }, res) => {
+app.post('/rpc', ({body}, res) => {
     const method = PRC[body.method];
 
     if (!method) {
@@ -28,12 +28,12 @@ app.post('/rpc', ({ body }, res) => {
     if (!body.params.id)
         body.params.id = body.id;
     method(body.params, (err, result) => {
-        if (err){
+        if (err) {
             res.json({
                 jsonrpc: 2.0,
                 error: err.message
             });
-        }else
+        } else
             res.json({
                 jsonrpc: 2.0,
                 result: result
@@ -46,7 +46,7 @@ const PRC = {
         users.findAll(callback);
     },
     create: (params, callback) => {
-        if (!params.name || !params.score){
+        if (!params.name || !params.score) {
             callback(new Error('Ошибочные параметры'));
             return false;
         }
